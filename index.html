@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Simulado Policial 2026</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f2f4f7;
+    margin:0;
+    padding:15px;
+}
+
+.container{
+    max-width:800px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+}
+
+h1{
+    text-align:center;
+}
+
+.aviso{
+    background:#eef4ff;
+    padding:15px;
+    border-radius:8px;
+    margin-bottom:20px;
+}
+
+#timer{
+    font-size:26px;
+    font-weight:bold;
+    text-align:center;
+    margin:20px 0;
+}
+
+.questao{
+    margin-bottom:25px;
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.questao p{
+    font-weight:bold;
+}
+
+label{
+    display:block;
+    padding:6px;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    background:#126b3a;
+    color:white;
+    border:0;
+    border-radius:8px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+#resultado{
+    display:none;
+    text-align:center;
+    padding:25px;
+}
+
+.aprovado{
+    color:#08752d;
+}
+
+.reprovado{
+    color:#c62828;
+}
+
+.nota{
+    font-size:24px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="prova">
+
+<h1>SIMULADO – ÁREA POLICIAL</h1>
+
+<div class="aviso">
+<strong>Simulado de treinamento – São Luís/MA – 2026</strong><br><br>
+30 questões.<br>
+Para aprovação: mínimo de <strong>20 acertos</strong>.<br>
+Tempo: <strong>2 horas</strong>.
+</div>
+
+<div id="timer">02:00:00</div>
+
+<div id="questoes"></div>
+
+<button onclick="finalizar()">FINALIZAR SIMULADO</button>
+
+</div>
+
+<div id="resultado">
+
+<h1 id="mensagem"></h1>
+
+<div class="nota" id="nota"></div>
+
+<p id="resumo"></p>
+
+<button onclick="location.reload()">FAZER NOVAMENTE</button>
+
+</div>
+
+</div>
+
+<script>
+
+const questoes = [
+
+{
+q:"1. A principal função da polícia na sociedade é:",
+o:["Promover interesses particulares","Preservar a ordem pública e proteger a sociedade","Aplicar penas judiciais","Criar leis"],
+c:1
+},
+
+{
+q:"2. Durante uma abordagem, o profissional deve agir com:",
+o:["Arbitrariedade","Respeito, legalidade e segurança","Agressividade","Indiferença"],
+c:1
+},
+
+{
+q:"3. O respeito aos direitos fundamentais é:",
+o:["Obrigatório","Opcional","Desnecessário","Aplicável somente em alguns casos"],
+c:0
+},
+
+{
+q:"4. Ao receber uma informação importante, o policial deve:",
+o:["Ignorá-la","Verificar sua veracidade","Divulgá-la imediatamente","Alterá-la"],
+c:1
+},
+
+{
+q:"5. Em uma situação de emergência, a primeira atitude deve ser:",
+o:["Avaliar a situação e agir com segurança","Abandonar o local","Esperar sem agir","Divulgar nas redes sociais"],
+c:0
+},
+
+{
+q:"6. Trabalhar em equipe contribui para:",
+o:["Aumentar conflitos","Melhorar a eficiência e segurança","Eliminar responsabilidades","Impedir comunicação"],
+c:1
+},
+
+{
+q:"7. Uma comunicação profissional deve ser:",
+o:["Confusa","Clara e objetiva","Agressiva","Incompleta"],
+c:1
+},
+
+{
+q:"8. Antes de transmitir uma informação oficial, deve-se:",
+o:["Inventar detalhes","Verificar sua correção","Publicar imediatamente","Ignorar a fonte"],
+c:1
+},
+
+{
+q:"9. O servidor público deve atuar visando:",
+o:["Interesse pessoal","Interesse público","Benefício de amigos","Benefício financeiro próprio"],
+c:1
+},
+
+{
+q:"10. Ao presenciar uma situação de risco, deve-se:",
+o:["Avaliar os riscos e adotar medidas adequadas","Agir sem pensar","Ignorar","Filmar primeiro"],
+c:0
+},
+
+{
+q:"11. Ética profissional significa:",
+o:["Agir conforme princípios e deveres","Fazer qualquer coisa para atingir objetivos","Ignorar regras","Beneficiar conhecidos"],
+c:0
+},
+
+{
+q:"12. A responsabilidade profissional exige:",
+o:["Atenção às consequências das decisões","Desinteresse","Improvisação constante","Ausência de planejamento"],
+c:0
+},
+
+{
+q:"13. Em uma abordagem, uma orientação deve ser:",
+o:["Clara e compreensível","Confusa","Contraditória","Incompleta"],
+c:0
+},
+
+{
+q:"14. Caso uma criança esteja perdida, a atitude adequada é:",
+o:["Providenciar proteção e buscar os responsáveis","Deixá-la sozinha","Ignorar","Mandá-la procurar ajuda sozinha"],
+c:0
+},
+
+{
+q:"15. Em uma emergência, o profissional deve:",
+o:["Adotar providências compatíveis com a situação","Abandonar o local","Esperar indefinidamente","Agir sem avaliar riscos"],
+c:0
+},
+
+{
+q:"16. O respeito às leis durante a atividade profissional é:",
+o:["Fundamental","Desnecessário","Opcional","Aplicável somente quando conveniente"],
+c:0
+},
+
+{
+q:"17. Uma equipe bem organizada tende a:",
+o:["Realizar o trabalho com maior segurança","Produzir mais conflitos","Eliminar comunicação","Aumentar riscos"],
+c:0
+},
+
+{
+q:"18. Informações sigilosas devem ser:",
+o:["Protegidas","Publicadas","Compartilhadas livremente","Enviadas para qualquer pessoa"],
+c:0
+},
+
+{
+q:"19. O atendimento ao cidadão deve ocorrer com:",
+o:["Respeito e profissionalismo","Desprezo","Agressividade","Discriminação"],
+c:0
+},
+
+{
+q:"20. Uma decisão profissional adequada deve considerar:",
+o:["A lei e as circunstâncias do caso","Somente opinião pessoal","Interesses particulares","Boatos"],
+c:0
+},
+
+{
+q:"21. A segurança durante uma ocorrência depende também de:",
+o:["Planejamento e atenção","Improvisação","Distração","Pressa excessiva"],
+c:0
+},
+
+{
+q:"22. O uso responsável de informações exige:",
+o:["Cuidado e verificação","Divulgação imediata","Alteração dos fatos","Compartilhamento irrestrito"],
+c:0
+},
+
+{
+q:"23. O profissional deve tratar as pessoas com:",
+o:["Dignidade e respeito","Preconceito","Hostilidade","Indiferença"],
+c:0
+},
+
+{
+q:"24. Em situações de conflito, é importante:",
+o:["Manter o controle e avaliar a situação","Aumentar a discussão","Ignorar riscos","Provocar os envolvidos"],
+c:0
+},
+
+{
+q:"25. Uma ordem legal deve ser:",
+o:["Cumprida dentro dos limites da lei","Ignorada","Alterada sem autorização","Divulgada nas redes sociais"],
+c:0
+},
+
+{
+q:"26. A disciplina profissional contribui para:",
+o:["Organização e eficiência","Desordem","Conflitos","Irresponsabilidade"],
+c:0
+},
+
+{
+q:"27. O trabalho policial exige atenção porque:",
+o:["As decisões podem afetar a segurança das pessoas","Não existem riscos","Todas as situações são iguais","Não há responsabilidade"],
+c:0
+},
+
+{
+q:"28. Ao cometer um erro profissional, a conduta adequada é:",
+o:["Reconhecer e adotar as providências cabíveis","Esconder sempre","Culpar outra pessoa","Alterar documentos"],
+c:0
+},
+
+{
+q:"29. O respeito ao cidadão deve ocorrer:",
+o:["Independentemente de diferenças pessoais","Somente com conhecidos","Somente quando solicitado","Apenas em situações formais"],
+c:0
+},
+
+{
+q:"30. O objetivo principal de um atendimento responsável é:",
+o:["Resolver a situação dentro da legalidade e segurança","Criar conflitos","Obter vantagem pessoal","Evitar qualquer responsabilidade"],
+c:0
+}
+
+];
+
+let respostas = new Array(questoes.length).fill(null);
+
+function mostrarQuestoes(){
+
+const area=document.getElementById("questoes");
+
+questoes.forEach((q,i)=>{
+
+let html=`
+<div class="questao">
+
+<p>${q.q}</p>
+
+`;
+
+q.o.forEach((op,j)=>{
+
+html+=`
+<label>
+<input type="radio"
+name="q${i}"
+value="${j}"
+onchange="respostas[${i}]=${j}">
+${String.fromCharCode(65+j)}) ${op}
+</label>
+`;
+
+});
+
+html+="</div>";
+
+area.innerHTML+=html;
+
+});
+
+}
+
+function finalizar(){
+
+let acertos=0;
+
+questoes.forEach((q,i)=>{
+
+if(respostas[i]===q.c){
+acertos++;
+}
+
+});
+
+let percentual=Math.round((acertos/questoes.length)*100);
+
+document.getElementById("prova").style.display="none";
+document.getElementById("resultado").style.display="block";
+
+if(acertos>=20){
+
+document.getElementById("mensagem").innerHTML=
+"🎉 PARABÉNS! VOCÊ FOI APROVADO NO SIMULADO!";
+
+document.getElementById("mensagem").className="aprovado";
+
+}else{
+
+document.getElementById("mensagem").innerHTML=
+"Você não atingiu a pontuação mínima para aprovação.";
+
+document.getElementById("mensagem").className="reprovado";
+
+}
+
+document.getElementById("nota").innerHTML=
+acertos+" de 30 questões corretas";
+
+document.getElementById("resumo").innerHTML=
+"Você acertou <strong>"+acertos+"</strong> questões e errou <strong>"+(30-acertos)+"</strong>.<br><br>"+
+"Porcentagem de acertos: <strong>"+percentual+"%</strong><br>"+
+"Pontuação mínima para aprovação: <strong>20 acertos</strong>.";
+
+window.scrollTo(0,0);
+
+}
+
+let segundos=2*60*60;
+
+function atualizarTempo(){
+
+let h=Math.floor(segundos/3600);
+let m=Math.floor((segundos%3600)/60);
+let s=segundos%60;
+
+document.getElementById("timer").innerText=
+String(h).padStart(2,"0")+":"+
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
+
+if(segundos<=0){
+
+clearInterval(relogio);
+alert("O tempo terminou. O simulado será finalizado.");
+finalizar();
+return;
+
+}
+
+segundos--;
+
+}
+
+mostrarQuestoes();
+atualizarTempo();
+
+const relogio=setInterval(atualizarTempo,1000);
+
+</script>
+
+</body>
+</html>
